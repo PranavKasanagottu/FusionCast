@@ -1,9 +1,11 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -13,6 +15,7 @@ export default function LoginPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login attempt:', formData);
+    router.push('/dashboard');
   };
 
   const handleChange = (e) => {
