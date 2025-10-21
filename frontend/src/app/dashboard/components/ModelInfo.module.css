@@ -1,0 +1,348 @@
+/* Main wrapper for the component content */
+.container {
+  max-width: 56rem; /* max-w-4xl */
+  margin-left: auto; /* mx-auto */
+  margin-right: auto; /* mx-auto */
+}
+
+/* Inner white content box */
+.infoCard {
+  background-color: #ffffff; /* bg-white */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md */
+  padding: 1.5rem; /* p-6 */
+}
+
+/* Main heading style */
+.mainHeading {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 1.5rem; /* mb-6 */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+}
+
+/* Icon style for the main heading */
+.mainIcon {
+  height: 1.75rem; /* h-7 */
+  width: 1.75rem; /* w-7 */
+  margin-right: 0.75rem; /* mr-3 */
+  color: #2563eb; /* text-blue-600 */
+}
+
+/* Architecture Overview section */
+.architectureOverview {
+  background-image: linear-gradient(to right, var(--tw-color-blue-50, #eff6ff), var(--tw-color-purple-50, #f5f3ff)); /* bg-gradient-to-r from-blue-50 to-purple-50 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.5rem; /* p-6 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Sub-heading style */
+.subHeading {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 0.75rem; /* mb-3 */
+}
+
+/* Body text style */
+.bodyText {
+  color: #374151; /* text-gray-700 */
+  line-height: 1.625; /* leading-relaxed */
+}
+
+/* Three Channel Cards container */
+.channelCardsGrid {
+  display: grid; /* grid */
+  grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+  gap: 1rem; /* gap-4 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Responsive grid for medium screens */
+@media (min-width: 768px) {
+  .channelCardsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* md:grid-cols-3 */
+  }
+}
+
+/* Common style for channel cards */
+.channelCard {
+  background-color: #ffffff; /* bg-white */
+  border-width: 2px; /* border-2 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.25rem; /* p-5 */
+  text-align: center; /* text-center */
+  transition-property: all; /* transition-all */
+  transition-duration: 300ms; /* duration-300 */
+  transform: scale(1); /* transform */
+  /* Hover states */
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* transition-all duration-300 */
+}
+
+.channelCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* hover:shadow-lg */
+  transform: scale(1.05); /* hover:scale-105 */
+}
+
+/* Specific channel card borders and colors */
+.cnnChannelCard {
+  border-color: #bfdbfe; /* border-blue-200 */
+}
+.lstmChannelCard {
+  border-color: #e9d5ff; /* border-purple-200 */
+}
+.gruChannelCard {
+  border-color: #d1fae5; /* border-green-200 */
+}
+
+/* Icon style within channel cards */
+.channelIcon {
+  height: 3rem; /* h-12 */
+  width: 3rem; /* w-12 */
+  margin-left: auto; /* mx-auto */
+  margin-right: auto; /* mx-auto */
+  margin-bottom: 0.75rem; /* mb-3 */
+}
+
+.cnnIconColor {
+  color: #2563eb; /* text-blue-600 */
+}
+.lstmIconColor {
+  color: #9333ea; /* text-purple-600 */
+}
+.gruIconColor {
+  color: #059669; /* text-green-600 */
+}
+
+/* Channel card title */
+.channelTitle {
+  font-weight: 600; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 0.5rem; /* mb-2 */
+  font-size: 1.125rem; /* text-lg */
+}
+
+/* Channel card description */
+.channelDescription {
+  font-size: 0.875rem; /* text-sm */
+  color: #4b5563; /* text-gray-600 */
+}
+
+/* Model Specifications section */
+.specificationsSection {
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.specificationsList {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+.spaceY3 > * + * {
+  margin-top: 0.75rem; /* space-y-3 */
+  margin-bottom: 0;
+}
+
+/* Specification item common style */
+.specItem {
+  display: flex; /* flex */
+  justify-content: space-between; /* justify-between */
+  align-items: center; /* items-center */
+  padding: 1rem; /* p-4 */
+  background-color: #f9fafb; /* bg-gray-50 */
+  border-radius: 0.5rem; /* rounded-lg */
+  transition-property: background-color; /* transition-colors */
+  transition-duration: 150ms;
+}
+
+.specItem:hover {
+  background-color: #f3f4f6; /* hover:bg-gray-100 */
+}
+
+/* Status item (active/ready) */
+.statusItem {
+  display: flex; /* flex */
+  justify-content: space-between; /* justify-between */
+  align-items: center; /* items-center */
+  padding: 1rem; /* p-4 */
+  background-color: #ecfdf5; /* bg-green-50 */
+  border: 1px solid #a7f3d0; /* border border-green-200 */
+  border-radius: 0.5rem; /* rounded-lg */
+}
+
+.specLabel {
+  color: #374151; /* text-gray-700 */
+  font-weight: 500; /* font-medium */
+}
+
+.specValue {
+  color: #1f2937; /* text-gray-800 */
+  font-weight: 600; /* font-semibold */
+}
+
+.statusValue {
+  color: #059669; /* text-green-600 */
+  font-weight: 600; /* font-semibold */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+}
+
+/* Status indicator dot */
+.statusDot {
+  height: 0.5rem; /* h-2 */
+  width: 0.5rem; /* w-2 */
+  background-color: #059669; /* bg-green-600 */
+  border-radius: 9999px; /* rounded-full */
+  margin-right: 0.5rem; /* mr-2 */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; /* animate-pulse */
+}
+
+/* Explainable AI Features section */
+.explainabilitySection {
+  background-color: #eff6ff; /* bg-blue-50 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.5rem; /* p-6 */
+  border: 1px solid #bfdbfe; /* border border-blue-200 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.explainabilityHeading {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 0.75rem; /* mb-3 */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+}
+
+.explainabilityIcon {
+  height: 1.5rem; /* h-6 */
+  width: 1.5rem; /* w-6 */
+  margin-right: 0.5rem; /* mr-2 */
+  color: #2563eb; /* text-blue-600 */
+}
+
+.explainabilityList {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+
+.listItem {
+  display: flex; /* flex */
+  align-items: flex-start; /* items-start */
+}
+
+.listCheckIcon {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  color: #2563eb; /* text-blue-600 */
+  margin-right: 0.75rem; /* mr-3 */
+  flex-shrink: 0; /* flex-shrink-0 */
+  margin-top: 0.125rem; /* mt-0.5 */
+}
+
+.listItemContent {
+  color: #374151; /* text-gray-700 */
+}
+
+.listItemTitle {
+  color: #1f2937; /* text-gray-800 */
+  font-weight: 600; /* font-semibold */
+}
+
+/* Performance Metrics section */
+.metricsSection {
+  background-color: #ffffff; /* bg-white */
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #e5e7eb; /* border border-gray-200 */
+  padding: 1.5rem; /* p-6 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.metricsGrid {
+  display: grid; /* grid */
+  grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+  gap: 1rem; /* gap-4 */
+}
+
+/* Responsive grid for medium screens */
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* md:grid-cols-3 */
+  }
+}
+
+.metricCard {
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1rem; /* p-4 */
+  text-align: center; /* text-center */
+}
+
+.accuracyCard {
+  background-image: linear-gradient(to bottom right, var(--tw-color-blue-50, #eff6ff), var(--tw-color-blue-100, #dbeafe)); /* bg-gradient-to-br from-blue-50 to-blue-100 */
+}
+.mseCard {
+  background-image: linear-gradient(to bottom right, var(--tw-color-purple-50, #f5f3ff), var(--tw-color-purple-100, #ede9fe)); /* bg-gradient-to-br from-purple-50 to-purple-100 */
+}
+.maeCard {
+  background-image: linear-gradient(to bottom right, var(--tw-color-green-50, #ecfdf5), var(--tw-color-green-100, #d1fae5)); /* bg-gradient-to-br from-green-50 to-green-100 */
+}
+
+.metricValue {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+}
+
+.accuracyValue {
+  color: #2563eb; /* text-blue-600 */
+}
+.mseValue {
+  color: #9333ea; /* text-purple-600 */
+}
+.maeValue {
+  color: #059669; /* text-green-600 */
+}
+
+.metricLabel {
+  font-size: 0.875rem; /* text-sm */
+  color: #4b5563; /* text-gray-600 */
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+/* Technical Details section */
+.technicalDetailsSection {
+  background-color: #f9fafb; /* bg-gray-50 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.5rem; /* p-6 */
+  border: 1px solid #e5e7eb; /* border border-gray-200 */
+}
+
+.detailsList {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+  font-size: 0.875rem; /* text-sm */
+  color: #374151; /* text-gray-700 */
+}
+.spaceY2 > * + * {
+  margin-top: 0.5rem; /* space-y-2 */
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  font-weight: 600; /* font-semibold */
+}
+
+/* Keyframes for the pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

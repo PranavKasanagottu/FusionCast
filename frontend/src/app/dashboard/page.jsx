@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Upload from './components/upload';
 import Profile from './components/profile';
 import ModelInfo from './components/modelInfo';
+import styles from './page.module.css'; // Import the CSS module
 
 export default function DashboardPage() {
   const [activeSection, setActiveSection] = useState('home');
@@ -25,11 +26,14 @@ export default function DashboardPage() {
         return <ModelInfo />;
       default:
         return (
-          <div className="text-center py-20">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          // Use the class from page.module.css
+          <div className={styles.homeSection}>
+            {/* Use the class from page.module.css */}
+            <h1 className={styles.homeHeading}>
               Welcome to the MCDFN Forecasting Dashboard 👋
             </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            {/* Use the class from page.module.css */}
+            <p className={styles.homeParagraph}>
               Upload your time-series CSV file, view explainable deep learning forecasts,
               and manage your profile — all in one place.
             </p>
@@ -39,13 +43,16 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Navbar */}
+    // Use the class from page.module.css
+    <div className={styles.dashboardContainer}>
+      {/* Navbar - remains the same as it's a separate component */}
       <Navbar user={user} activeSection={activeSection} setActiveSection={setActiveSection} />
 
       {/* Section Content */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="bg-white rounded-xl shadow-md p-8">{renderSection()}</div>
+      {/* Use the class from page.module.css */}
+      <main className={styles.mainContent}>
+        {/* Use the class from page.module.css */}
+        <div className={styles.contentWrapper}>{renderSection()}</div>
       </main>
     </div>
   );

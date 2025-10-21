@@ -1,0 +1,65 @@
+/* Container for the entire dashboard */
+.dashboardContainer {
+  min-height: 100vh;
+  background-color: #f9fafb; /* bg-gray-50 */
+  display: flex;
+  flex-direction: column; /* flex flex-col */
+}
+
+/* Main content area */
+.mainContent {
+  flex: 1; /* flex-1 */
+  max-width: 80rem; /* max-w-7xl */
+  margin-left: auto; /* mx-auto */
+  margin-right: auto; /* mx-auto */
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  padding-top: 2.5rem; /* py-10 */
+  padding-bottom: 2.5rem; /* py-10 */
+}
+
+/* Responsive padding for sm and lg breakpoints */
+@media (min-width: 640px) {
+  .mainContent {
+    padding-left: 1.5rem; /* sm:px-6 */
+    padding-right: 1.5rem; /* sm:px-6 */
+  }
+}
+@media (min-width: 1024px) {
+  .mainContent {
+    padding-left: 2rem; /* lg:px-8 */
+    padding-right: 2rem; /* lg:px-8 */
+  }
+}
+
+/* Content wrapper (white box) */
+.contentWrapper {
+  background-color: #ffffff; /* bg-white */
+  border-radius: 0.75rem; /* rounded-xl */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md */
+  padding: 2rem; /* p-8 */
+}
+
+/* Home section container */
+.homeSection {
+  text-align: center; /* text-center */
+  padding-top: 5rem; /* py-20 */
+  padding-bottom: 5rem; /* py-20 */
+}
+
+/* Home section heading */
+.homeHeading {
+  font-size: 1.875rem; /* text-3xl */
+  line-height: 2.25rem;
+  font-weight: 700; /* font-bold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+/* Home section paragraph */
+.homeParagraph {
+  color: #4b5563; /* text-gray-600 */
+  max-width: 42rem; /* max-w-2xl */
+  margin-left: auto; /* mx-auto */
+  margin-right: auto; /* mx-auto */
+}
