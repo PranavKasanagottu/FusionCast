@@ -1,4 +1,4 @@
-# FusionCast# 🚀 FusionCast — Intelligent Demand Forecasting Platform
+# 🚀 FusionCast — Intelligent Demand Forecasting Platform
 
 FusionCast is an advanced demand forecasting web application built using **Next.js** that integrates deep learning-based forecasting models to enhance prediction accuracy and interpretability.  
 It aims to improve upon the original **MCDFN (Multi-Channel Deep Forecasting Network)** model by fusing multiple data sources and applying advanced neural architectures for smarter, adaptive demand forecasting.
