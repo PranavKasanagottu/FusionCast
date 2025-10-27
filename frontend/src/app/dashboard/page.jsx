@@ -67,6 +67,7 @@ import Upload from './components/upload';
 import Profile from './components/profile';
 import ModelInfo from './components/modelInfo';
 import Results from './components/results';
+import SavedResults from './components/savedResults';
 import { supabase } from '../../../lib/supabaseClient';
 import styles from './page.module.css'; 
 
@@ -155,7 +156,17 @@ export default function DashboardPage() {
       case 'modelInfo':
         return <ModelInfo />;
       case 'results':
-        return <Results />;
+        // Check if we have data in URL (individual forecast) or show saved results
+        const params = new URLSearchParams(window.location.search);
+        const dataParam = params.get('data');
+        
+        if (dataParam) {
+          // Show individual forecast result
+          return <Results />;
+        } else {
+          // Show list of saved results
+          return <SavedResults />;
+        }
       default:
         return (
           <div className={styles.homeSection}>

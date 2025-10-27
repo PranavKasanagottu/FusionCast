@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Upload, FileText, X, Check, AlertCircle } from 'lucide-react';
+import { supabase } from '../../../../lib/supabaseClient';
 import styles from './Upload.module.css'; // Import the CSS module
 
 export default function UploadPage() {
@@ -81,6 +82,26 @@ export default function UploadPage() {
       if(response.ok && data.status === 'success'){
         setUploadStatus({ type: 'success', message: 'Forecast generated successfully!' });
         console.log('Forecast generated:', data);
+        
+        // Save forecast to Supabase
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          
+          if (user) {
+            const forecastName = file.name.replace('.csv', '') || `Forecast_${new Date().toISOString()}`;
+            
+            await supabase.from('forecasts').insert({
+              user_id: user.id,
+              name: forecastName,
+              historical_data: data.historical,
+              forecast_data: data.forecast,
+              metrics: data.metrics
+            });
+          }
+        } catch (error) {
+          console.error('Error saving forecast:', error);
+          // Continue to show results even if save fails
+        }
         
         // Redirect to results page after a short delay
         setTimeout(() => {

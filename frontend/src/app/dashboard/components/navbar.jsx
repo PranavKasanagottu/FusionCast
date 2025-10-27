@@ -106,7 +106,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Home, User, Upload, Database, LogOut, Menu, X } from 'lucide-react';
+import { Home, User, Upload, Database, LogOut, Menu, X, BarChart3 } from 'lucide-react';
 import { supabase } from '../../../../lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
@@ -118,6 +118,7 @@ export default function Navbar({ user, activeSection, setActiveSection }) {
   const navItems = [
     { id: 'home', name: 'Home', icon: Home },
     { id: 'upload', name: 'Upload Data', icon: Upload },
+    { id: 'results', name: 'My Results', icon: BarChart3 },
     { id: 'profile', name: 'Profile', icon: User },
     { id: 'modelInfo', name: 'Model Info', icon: Database },
   ];
