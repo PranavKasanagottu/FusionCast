@@ -37,11 +37,6 @@ npm install
 npm run build
 ```
 
-### 🏗️ 3. Build the Application
-```bash
-npm run build
-```
-
 ### ▶️ 4. Start the Server
 ```bash
 npm start
@@ -75,7 +70,7 @@ This methodology supports continuous improvement and rapid iteration throughout 
 - **Development** — Implement backend APIs, frontend components, and model training scripts. 
 - **Testing** — Sprint reviews, retrospectives, and backlog updates. 
 - **Review & Feedback** — Compares results with baselines like MCDFN and classical models.
-- **Deployment"** - Deploy to staging and production environments with CI/CD pipelines.
+- **Deployment** — Deploy to staging and production environments with CI/CD pipelines.
 
 ---
 
@@ -100,7 +95,7 @@ This methodology supports continuous improvement and rapid iteration throughout 
 |------|------|------|
 | MKN Sai Varun | Application Developer | MKN-Sai-Varun
 | K Pranav | Application Developer | PranavKasanagottu
-| G Balasai Sri Manikanta | Model Architect | 
+| G Balasai Sri Manikanta | Model Architect | balasai14
 | K Preetham Reddy | Model Architect | K-Preetham-Reddy
 
 ---
