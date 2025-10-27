@@ -67,11 +67,30 @@ export default function UploadPage() {
 
     setIsUploading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try{
+      const response = await fetch('http://127.0.0.1:8000/api/upload-csv/',{
+        method : 'POST',
+        body : formData,
+      });
+
+      const data = await response.json();
+
+      if(response.ok){
+        setUploadStatus({ type: 'success', message: 'File uploaded successfully!' });
+        console.log('CSV file uploaded successfully:', data);
+      }
+      else{
+        setUploadStatus({ type: 'error', message: data.error || 'Upload failed. Please try again.' });
+      }
+    } catch (error){
+      setUploadStatus({ type: 'error', message: 'An error occurred during upload. Please try again.' });
+    } finally{
       setIsUploading(false);
-      setUploadStatus({ type: 'success', message: 'File uploaded successfully!' });
-    }, 2000);
+    }
+    
   };
 
   // Clear file
