@@ -254,12 +254,12 @@ export default function LoginPage() {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <a
-              href="#forgot"
+            <Link
+              href="/forgot-password"
               className="text-sm text-gray-600 hover:text-indigo-600 transition-all duration-300 ease-in-out"
             >
               Forgot your password?
-            </a>
+            </Link>
           </div>
         </div>
       </div>

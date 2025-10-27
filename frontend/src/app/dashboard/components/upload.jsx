@@ -71,22 +71,28 @@ export default function UploadPage() {
     formData.append('file', file);
 
     try{
-      const response = await fetch('http://127.0.0.1:8000/api/upload-csv/',{
+      const response = await fetch('http://127.0.0.1:8000/api/predict/',{
         method : 'POST',
         body : formData,
       });
 
       const data = await response.json();
 
-      if(response.ok){
-        setUploadStatus({ type: 'success', message: 'File uploaded successfully!' });
-        console.log('CSV file uploaded successfully:', data);
+      if(response.ok && data.status === 'success'){
+        setUploadStatus({ type: 'success', message: 'Forecast generated successfully!' });
+        console.log('Forecast generated:', data);
+        
+        // Redirect to results page after a short delay
+        setTimeout(() => {
+          const resultsData = encodeURIComponent(JSON.stringify(data));
+          window.location.href = `/dashboard?section=results&data=${resultsData}`;
+        }, 1500);
       }
       else{
-        setUploadStatus({ type: 'error', message: data.error || 'Upload failed. Please try again.' });
+        setUploadStatus({ type: 'error', message: data.error || 'Forecast failed. Please try again.' });
       }
     } catch (error){
-      setUploadStatus({ type: 'error', message: 'An error occurred during upload. Please try again.' });
+      setUploadStatus({ type: 'error', message: 'An error occurred during forecast. Please try again.' });
     } finally{
       setIsUploading(false);
     }
