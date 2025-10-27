@@ -2,33 +2,9 @@
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  background: var(--background);
   min-height: 100vh;
   position: relative;
-}
-
-.resultsContainer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.95);
-  z-index: 0;
-}
-
-.resultsContainer > * {
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 .resultsHeader {
@@ -41,7 +17,7 @@
 .mainTitle {
   font-size: 2rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--foreground);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -50,13 +26,13 @@
 .titleIcon {
   width: 2rem;
   height: 2rem;
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .backButton {
   padding: 0.75rem 1.5rem;
-  background: #6366f1;
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -65,7 +41,7 @@
 }
 
 .backButton:hover {
-  background: #4f46e5;
+  opacity: 0.9;
   transform: translateY(-2px);
 }
 
@@ -89,11 +65,11 @@
 }
 
 .metricCard {
-  background: white;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.1), 0 4px 6px rgba(99, 102, 241, 0.05);
-  border: 2px solid transparent;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -106,7 +82,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  background: var(--primary);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -117,8 +93,8 @@
 
 .metricCard:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2), 0 8px 16px rgba(99, 102, 241, 0.15);
-  border-color: #6366f1;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-color: var(--primary);
 }
 
 .metricHeader {
@@ -131,31 +107,32 @@
 .metricIcon {
   width: 1.5rem;
   height: 1.5rem;
-  color: #6366f1;
+  color: var(--primary);
 }
 
 .metricLabel {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-weight: 500;
 }
 
 .metricValue {
   font-size: 2rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--foreground);
 }
 
 .trendPositive {
-  color: #10b981 !important;
+  color: var(--success) !important;
 }
 
 .trendNegative {
-  color: #ef4444 !important;
+  color: var(--error) !important;
 }
 
 .chartContainer {
-  background: white;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -165,7 +142,7 @@
 .chartTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
   margin-bottom: 1.5rem;
 }
 
@@ -176,7 +153,7 @@
   height: 300px;
   gap: 2px;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--border);
 }
 
 .barContainer {
@@ -201,16 +178,16 @@
 }
 
 .barHistorical {
-  background: linear-gradient(to top, #6366f1, #818cf8);
+  background: var(--primary);
 }
 
 .barForecast {
-  background: linear-gradient(to top, #10b981, #34d399);
+  background: var(--success);
 }
 
 .barLabel {
   font-size: 0.625rem;
-  color: #64748b;
+  color: var(--muted-foreground);
   margin-top: 0.25rem;
   text-align: center;
   writing-mode: vertical-rl;
@@ -229,7 +206,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--muted-foreground);
 }
 
 .legendColor {
@@ -240,11 +217,12 @@
 
 .separator {
   margin-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border);
 }
 
 .forecastDetails {
-  background: white;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
@@ -253,7 +231,7 @@
 .sectionTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
   margin-bottom: 1rem;
 }
 
@@ -275,17 +253,17 @@
 }
 
 .forecastRow:hover {
-  background: #f1f5f9;
+  background: var(--accent);
 }
 
 .forecastCell {
   padding: 0.5rem;
-  color: #475569;
+  color: var(--muted-foreground);
   font-size: 0.875rem;
 }
 
 .forecastCell strong {
-  color: #1e293b;
+  color: var(--foreground);
   font-weight: 600;
 }
 
@@ -300,8 +278,8 @@
 }
 
 .loadingSpinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #6366f1;
+  border: 4px solid var(--muted);
+  border-top: 4px solid var(--primary);
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -317,26 +295,26 @@
 .errorIcon {
   width: 3rem;
   height: 3rem;
-  color: #ef4444;
+  color: var(--error);
   margin-bottom: 1rem;
 }
 
 .errorContainer h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--foreground);
   margin-bottom: 0.5rem;
 }
 
 .errorContainer p {
-  color: #64748b;
+  color: var(--muted-foreground);
   margin-bottom: 1.5rem;
 }
 
 .errorButton {
   padding: 0.75rem 1.5rem;
-  background: #6366f1;
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -345,6 +323,5 @@
 }
 
 .errorButton:hover {
-  background: #4f46e5;
+  opacity: 0.9;
 }
-

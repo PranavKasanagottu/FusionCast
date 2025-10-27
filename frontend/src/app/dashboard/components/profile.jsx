@@ -455,48 +455,67 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, Mail, Calendar, Edit2, Save, X } from 'lucide-react';
+import { User, Mail, Calendar, Edit2, Save, X, BarChart3, Database, Clock } from 'lucide-react';
 import { supabase } from '../../../../lib/supabaseClient';
+import { useToast } from '../../../../contexts/ToastContext';
 import styles from './Profile.module.css';
 
 export default function Profile({ user, setUser }) {
+  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     name: user.name,
     email: user.email,
-    joinDate: user.joinDate || new Date().toLocaleDateString(),
   });
-  const [lastLogin, setLastLogin] = useState(null);
+  const [userStats, setUserStats] = useState({
+    forecastCount: 0,
+    lastLogin: null,
+    createdAt: null,
+  });
 
   useEffect(() => {
     // Sync formData when user updates
     setFormData({
       name: user.name,
       email: user.email,
-      joinDate: user.joinDate || new Date().toLocaleDateString(),
     });
 
-    // Fetch Supabase user for last login
-    const fetchLastLogin = async () => {
-      const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+    // Fetch user data and stats
+    const fetchUserData = async () => {
+      try {
+        const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
 
-      if (error) {
-        console.log('Error fetching user:', error.message);
-        return;
-      }
+        if (error) {
+          console.error('Error fetching user:', error.message);
+          return;
+        }
 
-      if (supabaseUser) {
-        setLastLogin(supabaseUser.last_sign_in_at);
-        // Optional: keep formData synced with Supabase username/email
-        setFormData((prev) => ({
-          ...prev,
-          name: supabaseUser.user_metadata?.username || supabaseUser.email,
-          email: supabaseUser.email,
-        }));
+        if (supabaseUser) {
+          // Get forecast count
+          const { count, error: countError } = await supabase
+            .from('forecasts')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', supabaseUser.id);
+
+          setUserStats({
+            forecastCount: count || 0,
+            lastLogin: supabaseUser.last_sign_in_at,
+            createdAt: supabaseUser.created_at,
+          });
+
+          // Update formData with Supabase data
+          setFormData({
+            name: supabaseUser.user_metadata?.username || supabaseUser.email?.split('@')[0] || 'User',
+            email: supabaseUser.email,
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
       }
     };
 
-    fetchLastLogin();
+    fetchUserData();
   }, [user]);
 
   const handleChange = (e) => {
@@ -504,25 +523,59 @@ export default function Profile({ user, setUser }) {
   };
 
   const handleSave = async () => {
-    // Update Supabase user metadata
-    const { data, error } = await supabase.auth.updateUser({
-      data: { username: formData.name }
-    });
-
-    if (error) {
-      alert(error.message);
+    if (!formData.name.trim()) {
+      toast.error('Name cannot be empty');
       return;
     }
 
-    // Update local state
-    setUser({ ...user, name: formData.name, email: formData.email });
-    setIsEditing(false);
-    alert('Profile updated successfully!');
+    setIsSaving(true);
+
+    try {
+      // Update Supabase user metadata
+      const { data, error } = await supabase.auth.updateUser({
+        data: { username: formData.name }
+      });
+
+      if (error) {
+        toast.error(error.message);
+        setIsSaving(false);
+        return;
+      }
+
+      // Update local state
+      setUser({ ...user, name: formData.name });
+      setIsEditing(false);
+      toast.success('Profile updated successfully!');
+    } catch (err) {
+      toast.error('Failed to update profile');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
-    setFormData({ name: user.name, email: user.email, joinDate: user.joinDate });
+    setFormData({ name: user.name, email: user.email });
     setIsEditing(false);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   return (
@@ -606,82 +659,75 @@ export default function Profile({ user, setUser }) {
         {/* Action Buttons */}
         {isEditing && (
           <div className={styles.actionButtonsContainer}>
-            <button onClick={handleSave} className={styles.saveButton}>
-              <Save className={styles.navItemIcon} />
-              <span className={styles.editButtonText}>Save Changes</span>
+            <button 
+              onClick={handleSave} 
+              className={styles.saveButton}
+              disabled={isSaving}
+            >
+              <Save size={16} />
+              <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
             </button>
-            <button onClick={handleCancel} className={styles.cancelButton}>
-              <X className={styles.navItemIcon} />
-              <span className={styles.editButtonText}>Cancel</span>
+            <button 
+              onClick={handleCancel} 
+              className={styles.cancelButton}
+              disabled={isSaving}
+            >
+              <X size={16} />
+              <span>Cancel</span>
             </button>
           </div>
         )}
 
-        {/* Additional Info */}
-        <div className={`${styles.sectionSeparator} ${styles.sectionSeparatorPt6}`}>
+        {/* Account Statistics */}
+        <div className={styles.sectionSeparator}>
           <h3 className={styles.sectionHeading}>Account Statistics</h3>
           <div className={styles.statsGrid}>
-            <div className={`${styles.statCard} ${styles.forecastsCard}`}>
-              <p className={`${styles.statValue} ${styles.forecastsValue}`}>12</p>
-              <p className={styles.statLabel}>Forecasts Run</p>
+            <div className={styles.statCard}>
+              <div className={styles.statIconWrapper}>
+                <BarChart3 size={24} />
+              </div>
+              <p className={styles.statValue}>{userStats.forecastCount}</p>
+              <p className={styles.statLabel}>Total Forecasts</p>
             </div>
-            <div className={`${styles.statCard} ${styles.datasetsCard}`}>
-              <p className={`${styles.statValue} ${styles.datasetsValue}`}>8</p>
+            <div className={styles.statCard}>
+              <div className={styles.statIconWrapper}>
+                <Database size={24} />
+              </div>
+              <p className={styles.statValue}>{userStats.forecastCount}</p>
               <p className={styles.statLabel}>Datasets Uploaded</p>
             </div>
           </div>
         </div>
 
         {/* Recent Activity */}
-        <div className={styles.sectionSeparatorMt6}>
+        <div className={styles.sectionSeparator}>
           <h3 className={styles.sectionHeading}>Recent Activity</h3>
-          <div className={styles.listSpaceY3}>
-            <div className={styles.listItem}>
-              <span className={styles.activityLabel}>Last Login</span>
-              <span className={styles.activityValue}>
-                {lastLogin ? new Date(lastLogin).toLocaleString() : 'Loading...'}
-              </span>
+          <div className={styles.activityList}>
+            <div className={styles.activityItem}>
+              <div className={styles.activityIcon}>
+                <Clock size={16} />
+              </div>
+              <div className={styles.activityContent}>
+                <span className={styles.activityLabel}>Last Login</span>
+                <span className={styles.activityValue}>
+                  {formatDateTime(userStats.lastLogin)}
+                </span>
+              </div>
             </div>
-            <div className={styles.listItem}>
-              <span className={styles.activityLabel}>Last Forecast</span>
-              <span className={styles.activityValue}>2 days ago</span>
-            </div>
-            <div className={styles.listItem}>
-              <span className={styles.activityLabel}>Account Created</span>
-              <span className={styles.activityValue}>{formData.joinDate}</span>
+            <div className={styles.activityItem}>
+              <div className={styles.activityIcon}>
+                <Calendar size={16} />
+              </div>
+              <div className={styles.activityContent}>
+                <span className={styles.activityLabel}>Account Created</span>
+                <span className={styles.activityValue}>
+                  {formatDate(userStats.createdAt)}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        {/* Account Settings */}
-         <div className={`${styles.sectionSeparator} ${styles.sectionSeparatorPt6}`}>
-           <h3 className={styles.sectionHeading}>
-             Account Settings
-           </h3>
-           <div className={styles.listSpaceY3}>
-             <button className={styles.listItemButton}>
-               <span className={styles.settingLabel}>Change Password</span>
-               <span className={styles.settingActionBlue}>Update</span>
-             </button>
-             <button className={styles.listItemButton}>
-               <span className={styles.settingLabel}>Email Notifications</span>
-               <span className={styles.settingActionGreen}>Enabled</span>
-             </button>
-             <button className={styles.listItemButton}>
-               <span className={styles.settingLabel}>Two-Factor Authentication</span>
-               <span className={styles.settingActionGray}>Disabled</span>
-             </button>
-           </div>
-         </div>
-        {/* Danger Zone */}
-        <div className={`${styles.sectionSeparator} ${styles.sectionSeparatorPt6} ${styles.sectionSeparatorBorderRed}`}>
-          <h3 className={`${styles.sectionHeading} ${styles.dangerZoneHeading}`}>Danger Zone</h3>
-          <button className={styles.dangerButton}>Delete Account</button>
-        </div>
-
       </div>
     </div>
-    
-
-    // </div>
   );
 }

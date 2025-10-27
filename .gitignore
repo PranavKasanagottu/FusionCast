@@ -1,2 +1,4 @@
 #Python Virtual Environment
 backend_venv/
+.vscode/
+.kiro/
