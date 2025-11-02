@@ -61,41 +61,90 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Navbar from './components/Navbar';
 import Upload from './components/upload';
 import Profile from './components/profile';
 import ModelInfo from './components/modelInfo';
-import { supabase } from '../../../lib/supabaseClient'; // Make sure this import exists
-import { useRouter } from 'next/navigation';
+import Results from './components/results';
+import SavedResults from './components/savedResults';
+import { supabase } from '../../../lib/supabaseClient';
 import styles from './page.module.css'; 
 
 export default function DashboardPage() {
   const router = useRouter();
-
   const [activeSection, setActiveSection] = useState('home');
-  const [user, setUser] = useState({ name: '', email: '' }); // <-- user state added
+  const [user, setUser] = useState({ name: '', email: '' });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+    // Check URL parameters for section and data
+    const params = new URLSearchParams(window.location.search);
+    const sectionParam = params.get('section');
+    if (sectionParam === 'results') {
+      setActiveSection('results');
+    }
+  }, []);
 
-      if (error) {
-        console.error(error);
-        return;
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAuth = async () => {
+      try {
+        // Get current session
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (!mounted) return;
+
+        if (error || !session) {
+          console.log('No session found, redirecting to login...');
+          // Keep loading state - don't set isAuthenticated to false
+          // Just redirect and keep showing loading
+          setIsLoading(true);
+          router.replace('/login');
+          return;
+        }
+
+        // User is authenticated
+        const supabaseUser = session.user;
+        setIsAuthenticated(true);
+        setUser({
+          name: supabaseUser.user_metadata?.username || supabaseUser.email?.split('@')[0] || 'User',
+          email: supabaseUser.email || '',
+        });
+        setIsLoading(false);
+      } catch (err) {
+        if (!mounted) return;
+        console.error('Auth check error:', err);
+        setIsLoading(true); // Keep loading
+        router.replace('/login');
       }
-
-      if (!supabaseUser) {
-        router.push('/login'); // redirect if not logged in
-        return;
-      }
-
-      setUser({
-        name: supabaseUser.user_metadata?.username || 'User',
-        email: supabaseUser.email,
-      });
     };
 
-    fetchUser();
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+
+      if (!session) {
+        setIsLoading(true); // Keep showing loading during redirect
+        router.replace('/login');
+      } else {
+        setIsAuthenticated(true);
+        setUser({
+          name: session.user.user_metadata?.username || session.user.email?.split('@')[0] || 'User',
+          email: session.user.email || '',
+        });
+        setIsLoading(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription?.unsubscribe();
+    };
   }, [router]);
 
   const renderSection = () => {
@@ -106,6 +155,18 @@ export default function DashboardPage() {
         return <Profile user={user} setUser={setUser} />;
       case 'modelInfo':
         return <ModelInfo />;
+      case 'results':
+        // Check if we have data in URL (individual forecast) or show saved results
+        const params = new URLSearchParams(window.location.search);
+        const dataParam = params.get('data');
+        
+        if (dataParam) {
+          // Show individual forecast result
+          return <Results />;
+        } else {
+          // Show list of saved results
+          return <SavedResults />;
+        }
       default:
         return (
           <div className={styles.homeSection}>
@@ -120,6 +181,72 @@ export default function DashboardPage() {
         );
     }
   };
+
+  // NEVER render dashboard content if not authenticated
+  // This check MUST come before any dashboard rendering
+  if (!isAuthenticated) {
+    // Show loading while we redirect
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        backgroundColor: 'var(--background, #ffffff)'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #6366f1',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 16px'
+          }}></div>
+          <p style={{ color: '#6b7280' }}>Checking authentication...</p>
+          <style jsx>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading only after we know user is authenticated
+  if (isLoading) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        backgroundColor: 'var(--background, #ffffff)'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #6366f1',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 16px'
+          }}></div>
+          <p style={{ color: '#6b7280' }}>Loading dashboard...</p>
+          <style jsx>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.dashboardContainer}>

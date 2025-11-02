@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import { Upload, FileText, X, Check, AlertCircle } from 'lucide-react';
+import { supabase } from '../../../../lib/supabaseClient';
+import { useToast } from '../../../../contexts/ToastContext';
 import styles from './Upload.module.css'; // Import the CSS module
 
 export default function UploadPage() {
+  const { toast } = useToast();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -17,8 +20,11 @@ export default function UploadPage() {
       setFile(selectedFile);
       setUploadStatus(null);
       parseCSVPreview(selectedFile);
+      toast.info('CSV file loaded successfully');
     } else {
-      setUploadStatus({ type: 'error', message: 'Please upload a valid CSV file' });
+      const errorMsg = 'Please upload a valid CSV file';
+      setUploadStatus({ type: 'error', message: errorMsg });
+      toast.error(errorMsg);
     }
   };
 
@@ -61,36 +67,71 @@ export default function UploadPage() {
   // Handle submit
   const handleSubmit = async () => {
     if (!file) {
-      setUploadStatus({ type: 'error', message: 'Please select a file first' });
+      const errorMsg = 'Please select a file first';
+      setUploadStatus({ type: 'error', message: errorMsg });
+      toast.error(errorMsg);
       return;
     }
 
     setIsUploading(true);
-    
+    toast.info('Generating forecast... This may take a moment.');
+
     const formData = new FormData();
     formData.append('file', file);
 
-    try{
-      const response = await fetch('http://127.0.0.1:8000/api/upload-csv/',{
-        method : 'POST',
-        body : formData,
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/predict/', {
+        method: 'POST',
+        body: formData,
       });
 
       const data = await response.json();
 
-      if(response.ok){
-        setUploadStatus({ type: 'success', message: 'File uploaded successfully!' });
-        console.log('CSV file uploaded successfully:', data);
+      if (response.ok && data.status === 'success') {
+        setUploadStatus({ type: 'success', message: 'Forecast generated successfully!' });
+        toast.success('Forecast generated successfully!');
+        console.log('Forecast generated:', data);
+
+        // Save forecast to Supabase
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+
+          if (user) {
+            const forecastName = file.name.replace('.csv', '') || `Forecast_${new Date().toISOString()}`;
+
+            await supabase.from('forecasts').insert({
+              user_id: user.id,
+              name: forecastName,
+              historical_data: data.historical,
+              forecast_data: data.forecast,
+              metrics: data.metrics
+            });
+            toast.success('Forecast saved to your account');
+          }
+        } catch (error) {
+          console.error('Error saving forecast:', error);
+          toast.warning('Forecast generated but could not be saved');
+        }
+
+        // Redirect to results page after a short delay
+        setTimeout(() => {
+          const resultsData = encodeURIComponent(JSON.stringify(data));
+          window.location.href = `/dashboard?section=results&data=${resultsData}`;
+        }, 1500);
       }
-      else{
-        setUploadStatus({ type: 'error', message: data.error || 'Upload failed. Please try again.' });
+      else {
+        const errorMsg = data.error || 'Forecast failed. Please try again.';
+        setUploadStatus({ type: 'error', message: errorMsg });
+        toast.error(errorMsg);
       }
-    } catch (error){
-      setUploadStatus({ type: 'error', message: 'An error occurred during upload. Please try again.' });
-    } finally{
+    } catch (error) {
+      const errorMsg = 'An error occurred during forecast. Please try again.';
+      setUploadStatus({ type: 'error', message: errorMsg });
+      toast.error(errorMsg);
+    } finally {
       setIsUploading(false);
     }
-    
+
   };
 
   // Clear file
@@ -113,11 +154,10 @@ export default function UploadPage() {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           // Dynamic class selection based on state
-          className={`${styles.dropZone} ${
-            isDragging
-              ? styles.dropZoneActive
-              : styles.dropZoneInactive
-          }`}
+          className={`${styles.dropZone} ${isDragging
+            ? styles.dropZoneActive
+            : styles.dropZoneInactive
+            }`}
         >
           <input
             type="file"
@@ -126,7 +166,7 @@ export default function UploadPage() {
             className="hidden"
             id="file-upload"
           />
-          
+
           {!file ? (
             <div>
               <Upload className={styles.uploadIcon} />
@@ -204,11 +244,10 @@ export default function UploadPage() {
 
         {uploadStatus && (
           <div
-            className={`${styles.statusMessage} ${
-              uploadStatus.type === 'success'
-                ? styles.statusSuccess
-                : styles.statusError
-            }`}
+            className={`${styles.statusMessage} ${uploadStatus.type === 'success'
+              ? styles.statusSuccess
+              : styles.statusError
+              }`}
           >
             {uploadStatus.type === 'success' ? (
               <Check className={styles.statusIcon} />
@@ -223,11 +262,10 @@ export default function UploadPage() {
           <button
             onClick={handleSubmit}
             disabled={!file || isUploading}
-            className={`${styles.submitButton} ${
-              file && !isUploading
-                ? styles.submitButtonActive
-                : styles.submitButtonDisabled
-            }`}
+            className={`${styles.submitButton} ${file && !isUploading
+              ? styles.submitButtonActive
+              : styles.submitButtonDisabled
+              }`}
           >
             {isUploading ? (
               <span className="flex items-center justify-center">

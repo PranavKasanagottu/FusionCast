@@ -106,9 +106,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Home, User, Upload, Database, LogOut, Menu, X } from 'lucide-react';
+import { Home, User, Upload, Database, LogOut, Menu, X, BarChart3 } from 'lucide-react';
 import { supabase } from '../../../../lib/supabaseClient';
 import { useRouter } from 'next/navigation';
+import ThemeToggle from '../../../../components/ThemeToggle';
 import styles from './Navbar.module.css';
 
 export default function Navbar({ user, activeSection, setActiveSection }) {
@@ -118,6 +119,7 @@ export default function Navbar({ user, activeSection, setActiveSection }) {
   const navItems = [
     { id: 'home', name: 'Home', icon: Home },
     { id: 'upload', name: 'Upload Data', icon: Upload },
+    { id: 'results', name: 'My Results', icon: BarChart3 },
     { id: 'profile', name: 'Profile', icon: User },
     { id: 'modelInfo', name: 'Model Info', icon: Database },
   ];
@@ -151,6 +153,7 @@ export default function Navbar({ user, activeSection, setActiveSection }) {
             ))}
 
             <div className={styles.userActions}>
+              <ThemeToggle />
               <span className={styles.userName}>Welcome, {user.name || 'Guest'}</span>
               <button onClick={handleLogout} className={styles.logoutButton}>
                 <LogOut className={styles.navItemIcon} style={{ marginRight: 0 }} />
