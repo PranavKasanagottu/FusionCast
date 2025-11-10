@@ -9,6 +9,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
 import os
 import json
+from .explainability import (
+    calculate_shap_approximation, 
+    calculate_pfi, 
+    get_feature_descriptions,
+    create_test_windows
+)
 
 # Load model at module level (only once)
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '..', 'mcdfn_model.keras')
@@ -141,6 +147,80 @@ def predict_forecast(request):
         else:
             forecast_change = 0
         
+        # Calculate explainability metrics
+        explainability_data = {
+            'shap_values': {},
+            'pfi_values': {},
+            'feature_descriptions': {},
+            'shap_method': 'gradient_approximation',
+            'pfi_method': 'permutation'
+        }
+        
+        try:
+            # Calculate SHAP approximation
+            print("Calculating SHAP values...")
+            shap_values = calculate_shap_approximation(
+                mcdfn_model, 
+                model_input, 
+                feature_scaler, 
+                target_scaler
+            )
+            explainability_data['shap_values'] = shap_values
+            
+            # Calculate PFI using a small test set from the input data
+            print("Calculating PFI values...")
+            # Create test windows from the last 60 days if available
+            if len(df) >= 60:
+                test_data = df.tail(60).copy()
+                # Apply same feature engineering
+                test_data['is_holiday'] = test_data.index.isin(bd_holidays).astype(int)
+                test_data['month'] = test_data.index.month
+                test_data['day_of_month'] = test_data.index.day
+                test_data['week_of_year'] = test_data.index.isocalendar().week
+                test_data['year'] = test_data.index.year
+                test_data['month_sin'] = np.sin(2 * np.pi * test_data['month'] / 12)
+                test_data['month_cos'] = np.cos(2 * np.pi * test_data['month'] / 12)
+                test_data['day_sin'] = np.sin(2 * np.pi * test_data['day_of_month'] / 31)
+                test_data['day_cos'] = np.cos(2 * np.pi * test_data['day_of_month'] / 31)
+                test_data['week_sin'] = np.sin(2 * np.pi * test_data['week_of_year'] / 52)
+                test_data['week_cos'] = np.cos(2 * np.pi * test_data['week_of_year'] / 52)
+                test_data['year_sin'] = np.sin(2 * np.pi * (test_data['year'] - test_data['year'].min()) / (test_data['year'].max() - test_data['year'].min() + 1))
+                test_data['year_cos'] = np.cos(2 * np.pi * (test_data['year'] - test_data['year'].min()) / (test_data['year'].max() - test_data['year'].min() + 1))
+                
+                test_features = test_data[['Sales', 'month_sin', 'month_cos', 'day_sin', 'day_cos',
+                                          'week_sin', 'week_cos', 'year_sin', 'year_cos', 'is_holiday']]
+                
+                # Scale test data
+                test_scaled = test_features.copy()
+                test_scaled[['Sales']] = target_scaler.transform(test_features[['Sales']])
+                other_cols = [col for col in test_features.columns if col not in ['Sales', 'is_holiday']]
+                test_scaled[other_cols] = feature_scaler.transform(test_features[other_cols])
+                
+                # Create windows
+                X_test, y_test = create_test_windows(test_scaled, 30, 30, 30)
+                
+                if len(X_test) > 0:
+                    pfi_values = calculate_pfi(
+                        mcdfn_model,
+                        X_test,
+                        y_test,
+                        target_scaler,
+                        n_repeats=3,  # Reduced for speed
+                        batch_size=32
+                    )
+                    explainability_data['pfi_values'] = pfi_values
+                else:
+                    print("Not enough data for PFI calculation")
+            else:
+                print("Not enough historical data for PFI (need 60+ days)")
+            
+            explainability_data['feature_descriptions'] = get_feature_descriptions()
+            
+        except Exception as e:
+            print(f"Warning: Could not calculate explainability metrics: {e}")
+            import traceback
+            traceback.print_exc()
+        
         return JsonResponse({
             'status': 'success',
             'historical': {
@@ -156,8 +236,11 @@ def predict_forecast(request):
                 'average_historical': round(np.mean(historical_sales), 2),
                 'average_forecast': round(np.mean(forecast_values), 2),
                 'max_forecast': round(np.max(forecast_values), 2),
-                'min_forecast': round(np.min(forecast_values), 2)
-            }
+                'min_forecast': round(np.min(forecast_values), 2),
+                'std_historical': round(np.std(historical_sales), 2),
+                'std_forecast': round(np.std(forecast_values), 2)
+            },
+            'explainability': explainability_data
         })
         
     except Exception as e:

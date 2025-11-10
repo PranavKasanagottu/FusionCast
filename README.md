@@ -18,6 +18,8 @@ Traditional models often fail to capture complex, multi-factor relationships inf
 - 📈 30-day forecasting with detailed metrics and visualization
 - 🔐 User authentication and saved forecasts via Supabase
 - 💾 Persistent forecast storage for analysis and comparison
+- 🔍 **NEW: Explainability Features** - SHAP-based feature importance analysis
+- 🎯 **NEW: Interactive Insights** - Understand what drives your forecasts
 
 ---
 
@@ -302,9 +304,56 @@ FormData {
     "average_forecast": 157.8,
     "max_forecast": 180.0,
     "min_forecast": 140.0
+  },
+  "explainability": {
+    "shap_values": {
+      "Sales": 0.45,
+      "month_sin": 0.15,
+      "is_holiday": 0.10,
+      ...
+    },
+    "feature_descriptions": {
+      "Sales": "Historical sales values",
+      ...
+    },
+    "method": "gradient_approximation"
   }
 }
 ```
+
+---
+
+## � Expla inability Features
+
+FusionCast now includes advanced explainability to help you understand what drives your forecasts.
+
+### Feature Importance Analysis
+- **SHAP-based insights**: See which features influence predictions most
+- **Visual rankings**: Interactive bar charts showing feature contributions
+- **Real-time calculation**: Get insights instantly with each forecast
+- **Gradient approximation**: Fast, accurate importance scores
+
+### How to Use
+1. Generate a forecast by uploading your CSV
+2. View results in the **Forecast** tab (standard metrics and charts)
+3. Switch to the **Explainability** tab to see:
+   - Feature importance rankings
+   - Visual importance bars with percentages
+   - Feature descriptions and interpretations
+
+### Features Analyzed
+- **Sales**: Historical sales patterns (typically most important)
+- **Seasonal patterns**: Month, week, and day cyclical effects
+- **Trends**: Year-over-year growth patterns
+- **Holidays**: Impact of holiday periods
+
+### Benefits
+- 🎯 **Transparency**: Understand why predictions are made
+- 📊 **Insights**: Discover hidden patterns in your data
+- ✅ **Trust**: Build confidence in model outputs
+- 🔧 **Debugging**: Identify data quality issues
+
+For detailed documentation, see [EXPLAINABILITY_GUIDE.md](EXPLAINABILITY_GUIDE.md)
 
 ---
 
