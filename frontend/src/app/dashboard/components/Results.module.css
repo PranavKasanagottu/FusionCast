@@ -325,3 +325,509 @@
 .errorButton:hover {
   opacity: 0.9;
 }
+
+/* Metric Cards Enhancement */
+.metricSubtext {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+/* Tab Navigation */
+.tabContainer {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+  overflow-x: auto;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--muted-foreground);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  bottom: -2px;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--foreground);
+  background: var(--accent);
+}
+
+.tabActive {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: var(--accent);
+}
+
+.tabContent {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Explainability Section */
+.explainabilityContainer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.explainabilityHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.explainabilityIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.explainabilityHeader h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0 0 0.5rem 0;
+}
+
+.explainabilitySubtext {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.explainabilityEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.emptyIcon {
+  width: 4rem;
+  height: 4rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+/* Feature Importance Chart */
+.importanceChart {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.importanceRow {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem;
+  background: var(--accent);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.importanceRow:hover {
+  background: var(--muted);
+  transform: translateX(8px);
+}
+
+.importanceLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.featureName {
+  font-weight: 600;
+  color: var(--foreground);
+  font-size: 0.95rem;
+}
+
+.featureDesc {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  line-height: 1.3;
+}
+
+.importanceBarContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.importanceBar {
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: var(--primary);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  animation: growBar 0.8s ease-out;
+}
+
+@keyframes growBar {
+  from {
+    width: 0 !important;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.importanceValue {
+  font-weight: 700;
+  color: var(--foreground);
+  font-size: 0.95rem;
+  min-width: 50px;
+  text-align: right;
+}
+
+.explainabilityFooter {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--accent);
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--primary);
+}
+
+.footerIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.explainabilityFooter p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+
+/* Line Chart Styles */
+.lineChartContainer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.lineChart {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+
+.dataPoint {
+  cursor: pointer;
+  transition: r 0.2s;
+}
+
+.dataPoint:hover {
+  r: 6;
+}
+
+.legendLine {
+  width: 2rem;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Overview Styles */
+.overviewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.insightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.insightCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.insightCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.insightHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.insightIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--primary);
+}
+
+.insightHeader h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.insightContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.insightRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.insightRow span {
+  color: var(--muted-foreground);
+}
+
+.insightRow strong {
+  color: var(--foreground);
+  font-size: 1rem;
+}
+
+.trendIndicator {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--accent);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.trendValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.trendLabel {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.positive {
+  color: var(--success) !important;
+}
+
+.negative {
+  color: var(--error) !important;
+}
+
+/* Forecast Table Styles */
+.forecastTableContainer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.tableHeader h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.downloadBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.forecastTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 80px 150px 1fr 150px;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+  align-items: center;
+}
+
+.tableRow:hover {
+  background: var(--accent);
+}
+
+.tableHeaderRow {
+  background: var(--muted);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tableHeaderRow:hover {
+  background: var(--muted);
+}
+
+.tableCell {
+  padding: 0.25rem;
+  color: var(--foreground);
+  font-size: 0.9rem;
+}
+
+.dayNumber {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Feature Importance Enhancements */
+.rank {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  text-align: center;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: 0.75rem;
+}
+
+.std {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  font-weight: 400;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .resultsContainer {
+    padding: 1rem;
+  }
+
+  .mainTitle {
+    font-size: 1.5rem;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .importanceRow {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tabContainer {
+    overflow-x: auto;
+  }
+
+  .tab {
+    white-space: nowrap;
+  }
+
+  .tableRow {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .insightsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .trendValue {
+    font-size: 2rem;
+  }
+}
